@@ -71,11 +71,10 @@ To run the project:
 
 ## 🧠 Author
 
-**Faith Okoth**  
-ALX Software Engineering Program – Backend Track
+** Derick Mokua**  
+ALX Software Engineering Program – Pro Backend
 
 ---
 
 ## 📜 License
-
-This project is licensed for educational purposes under the ALX program. Please refer to the [LICENSE](../LICENSE) file if applicable.
+ the project is free for use for learning purposes.
