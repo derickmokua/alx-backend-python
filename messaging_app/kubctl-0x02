@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# kubctl-0x02
+# Script to perform blue-green deployment in Kubernetes
+
+set -e
+
+NAMESPACE="default"
+
+echo "=== Deploying Blue version (current stable)... ==="
+kubectl apply -f messaging_app/blue_deployment.yaml --namespace=$NAMESPACE
+
+echo "=== Deploying Green version (new release)... ==="
+kubectl apply -f messaging_app/green_deployment.yaml --namespace=$NAMESPACE
+
+echo "=== Applying Service... ==="
+kubectl apply -f messaging_app/kubeservice.yaml --namespace=$NAMESPACE
+
+echo "=== Verifying pods... ==="
+kubectl get pods -l app=django-messaging --namespace=$NAMESPACE
+
+echo "=== Checking logs for Green deployment pods... ==="
+GREEN_PODS=$(kubectl get pods -l app=django-messaging,version=green --namespace=$NAMESPACE -o jsonpath='{.items[*].metadata.name}')
+
+for pod in $GREEN_PODS
+do
+  echo "--- Logs for $pod ---"
+  kubectl logs $pod --namespace=$NAMESPACE || echo "⚠️ Failed to fetch logs for $pod"
+done
+
+echo "=== Blue-Green Deployment Completed 🚀 ==="
+echo "👉 Update 'kubeservice.yaml' selector to 'green' when ready to switch traffic."
