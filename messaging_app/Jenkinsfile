@@ -1,0 +1,24 @@
+pipeline {
+    agent any
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', 
+                    url: 'https://github.com/derickmokua/alx-backend-python.git'
+            }
+        }
+        stage('Install dependencies & Run Tests') {
+            steps {
+                sh '''
+                pip install -r messaging_app/requirements.txt
+                pytest messaging_app/tests --junitxml=report.xml
+                '''
+            }
+        }
+    }
+    post {
+        always {
+            junit 'report.xml'
+        }
+    }
+}
